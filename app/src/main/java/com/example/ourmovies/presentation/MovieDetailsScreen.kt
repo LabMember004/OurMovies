@@ -30,8 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import com.example.ourmovies.AuthViewModel
 import com.example.ourmovies.data.Movies
+import com.example.ourmovies.domain.viewModels.AuthViewModel
+import com.example.ourmovies.domain.viewModels.FavoriteViewModel
 import com.example.ourmovies.domain.viewModels.MoviesViewModel
 
 
@@ -39,8 +40,9 @@ import com.example.ourmovies.domain.viewModels.MoviesViewModel
 fun MovieDetailsScreen(
     movieId: String,
     navController: NavController,
-    authViewModel: AuthViewModel,
-    moviesViewModel: MoviesViewModel = viewModel() // Use the MoviesViewModel here
+    authViewModel: AuthViewModel = viewModel(),
+    moviesViewModel: MoviesViewModel = viewModel(),
+    favoriteViewModel: FavoriteViewModel = viewModel()
 ) {
     // Observe the token from AuthViewModel
     val token by authViewModel.token.observeAsState("")
@@ -53,7 +55,7 @@ fun MovieDetailsScreen(
 
     // Display content if movie is available, otherwise show loading screen
     if (movie != null) {
-        MovieDetailsContent(movie, navController, moviesViewModel, token)
+        MovieDetailsContent(movie, navController, favoriteViewModel, token)
     } else {
         MovieDetailsLoadingScreen()
     }
@@ -63,9 +65,10 @@ fun MovieDetailsScreen(
 fun MovieDetailsContent(
     movie: Movies,
     navController: NavController,
-    viewModel: MoviesViewModel,
+    viewModel: FavoriteViewModel,
     token: String
 ) {
+
     Column(modifier = Modifier.padding(16.dp)) {
 
         // Movie Poster

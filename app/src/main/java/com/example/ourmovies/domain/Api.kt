@@ -36,7 +36,7 @@ interface Api {
     ): Response<ResponseBody>
 
     @GET("favorites")
-     suspend fun getFavorites(
+    suspend fun getFavorites(
         @Header("Authorization") token: String
     ): Response<List<Movies>>
 

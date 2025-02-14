@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.ourmovies.domain.viewModels.AuthViewModel
 import com.example.ourmovies.presentation.FavoriteMoviesScreen
 
 import com.example.ourmovies.presentation.LoginScreen
@@ -34,49 +35,43 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             OurMoviesTheme {
-            val authViewModel: AuthViewModel = viewModel()
-            Navigation(authViewModel = authViewModel)
+                Navigation()
 
             }
         }
     }
 }
 
-class AuthViewModel : ViewModel() {
-    private val _token = MutableLiveData<String>()
-    val token: LiveData<String> get() = _token
 
-    fun setToken(newToken: String) {
-        _token.value = newToken
-    }
-}
 
 @Composable
 fun Navigation(
     navController: NavHostController = rememberNavController(),
-    authViewModel: AuthViewModel // Ensure this is passed from a parent (like MainActivity)
+    viewModel: AuthViewModel = viewModel()  // Use the AuthViewModel
 ) {
-    val token by authViewModel.token.observeAsState("")
+    // Observe the token from the AuthViewModel
+    val token by viewModel.token.observeAsState("")
 
     NavHost(navController = navController, startDestination = Screen.Login.route) {
         composable(route = Screen.Login.route) {
             LoginScreen(navController = navController, onLoginSuccess = { newToken ->
-                authViewModel.setToken(newToken ?: "") // ✅ No need for .toString()
+                // Save the token in your AuthViewModel
+                viewModel.setToken(newToken ?: "")
+                // Navigate to MainPage
                 navController.navigate(Screen.MainPage.route)
             })
         }
-
 
         composable(
             route = "movieDetails/{movieId}",
             arguments = listOf(navArgument("movieId") { type = NavType.StringType })
         ) { backStackEntry ->
             val movieId = backStackEntry.arguments?.getString("movieId") ?: ""
-            MovieDetailsScreen(movieId, navController = navController, authViewModel = authViewModel)
+            MovieDetailsScreen(movieId, navController = navController, authViewModel = viewModel)  // Pass the viewModel to MovieDetailsScreen
         }
 
         composable(route = "FavoriteMoviesScreen") {
-            FavoriteMoviesScreen(token = token, navController = navController)
+            FavoriteMoviesScreen(token = token, navController = navController)  // Now you have the token here
         }
 
         composable(route = Screen.MainPage.route) {
@@ -84,5 +79,7 @@ fun Navigation(
         }
     }
 }
+
+
 
 

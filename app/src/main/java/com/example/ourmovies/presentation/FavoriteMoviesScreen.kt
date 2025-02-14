@@ -28,10 +28,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.ourmovies.data.Movies
+import com.example.ourmovies.domain.viewModels.FavoriteViewModel
 import com.example.ourmovies.domain.viewModels.MoviesViewModel
 
 @Composable
-fun FavoriteMoviesScreen(viewModel: MoviesViewModel = viewModel(), token: String , navController: NavController) {
+fun FavoriteMoviesScreen(viewModel: FavoriteViewModel = viewModel(), token: String , navController: NavController) {
     val favorites =viewModel.favorites.value
 
 
@@ -51,13 +52,13 @@ fun FavoriteMoviesScreen(viewModel: MoviesViewModel = viewModel(), token: String
     }
 
 
-        // Display the list of favorite movies
-        LazyColumn {
-            items(favorites) { movie ->
-                MovieItem(movie)
-            }
+    // Display the list of favorite movies
+    LazyColumn {
+        items(favorites) { movie ->
+            MovieItem(movie)
         }
-  }
+    }
+}
 
 @Composable
 fun MovieItem(movie: Movies) {

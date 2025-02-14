@@ -19,12 +19,12 @@ import kotlinx.coroutines.launch
 
 class MoviesViewModel: ViewModel() {
     private val repository = Repository()
-    private val _data = MutableStateFlow<List<Movies>>(emptyList())
+
     private val _paginationData = MutableStateFlow<MoviesResponse?>(null)
+    private val _data = MutableStateFlow<List<Movies>>(emptyList())
     val data: StateFlow<List<Movies>> = _data.asStateFlow()
 
-    private val _favorites = mutableStateOf<List<Movies>>(emptyList())
-    val favorites: State<List<Movies>> get() = _favorites
+
 
 
     private var currentPage = 1
@@ -64,63 +64,9 @@ class MoviesViewModel: ViewModel() {
         }
     }
 
-    fun addFavoriteMovie(movieId: String, token: String) {
-        Log.d("MoviesViewModel", "addFavoriteMovie called with movieId: $movieId and token: $token")
-        viewModelScope.launch {
-            try {
-                if (token.isNotEmpty()) {
-                    // Log the request body
-                    val favoriteRequest = FavoriteRequest(movieId)
-                    Log.d("MoviesViewModel", "Sending request: $favoriteRequest")
-
-                    val response = RetrofitInstance.api.addToFavorites(
-                        token = "Bearer $token",
-                        request = favoriteRequest
-                    )
-
-                    if (response.isSuccessful) {
-                        Log.d("MoviesViewModel", "Movie added to favorites successfully")
-                        getFavorites(token)
-                    } else {
-                        Log.e("MoviesViewModel", "Failed to add movie: ${response.code()} - ${response.message()}")
-                        val errorBody = response.errorBody()?.string() ?: "No error body"
-                        Log.e("MoviesViewModel", "Error body: $errorBody")
-                    }
-                } else {
-                    Log.e("MoviesViewModel", "Token is missing or invalid.")
-                }
-            } catch (e: Exception) {
-                Log.e("MoviesViewModel", "Error: ${e.message}")
-            }
-        }
-    }
-
-
-
-
-    fun getFavorites(token: String) {
-        isLoading = true
-        viewModelScope.launch {
-            try {
-                val response = RetrofitInstance.api.getFavorites("Bearer $token")
-                if (response.isSuccessful) {
-                    val favoriteList = response.body() ?: emptyList()
-                    println("Favorites response: $favoriteList")
-                    _favorites.value = favoriteList
-                } else {
-                    println("Failed to fetch favorites: ${response.code()}")
-                    _favorites.value = emptyList()
-                }
-            } catch (e: Exception) {
-                println("Error fetching favorites: ${e.message}")  // Log any exceptions
-                _favorites.value = emptyList()
-            } finally {
-                isLoading = false
-            }
-        }
-    }
-
 }
+
+
 
 
 

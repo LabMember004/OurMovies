@@ -68,7 +68,7 @@ fun MainPage(viewModel: MoviesViewModel = viewModel(), navController: NavControl
             modifier = Modifier.padding(16.dp)
         ) {
             items(data) { item: Movies ->
-                MovieCard(movie = item, navController, viewModel)
+                MovieCard(movie = item, navController)
             }
 
             if (isLoading) {
@@ -82,7 +82,7 @@ fun MainPage(viewModel: MoviesViewModel = viewModel(), navController: NavControl
 
 
 @Composable
-fun MovieCard(movie: Movies, navController: NavController, viewModel: MoviesViewModel) {
+fun MovieCard(movie: Movies, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
