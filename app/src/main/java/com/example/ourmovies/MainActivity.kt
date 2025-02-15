@@ -1,6 +1,14 @@
 package com.example.ourmovies
 
+import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.graphics.Movie
+import android.net.ConnectivityManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,6 +29,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.ourmovies.domain.navBar.BottomNavBar
+import com.example.ourmovies.domain.network.IsInternetAvailable
 import com.example.ourmovies.domain.viewModels.AuthViewModel
 import com.example.ourmovies.presentation.FavoriteMoviesScreen
 
@@ -33,6 +42,7 @@ import com.example.ourmovies.presentation.navigation.Screen
 import com.example.ourmovies.ui.theme.OurMoviesTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
@@ -45,6 +55,28 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+    class NetworkChangeReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (!IsInternetAvailable.checkInternetAvailability(context)) {
+                Toast.makeText(context, "No internet connection available", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
+    val networkReceiver = NetworkChangeReceiver()
+
+    override fun onStart() {
+        super.onStart()
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkReceiver, filter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(networkReceiver)
+    }
+
 }
 
 
@@ -52,23 +84,21 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Navigation(
     navController: NavHostController = rememberNavController(),
-    viewModel: AuthViewModel = viewModel()  // Use the AuthViewModel
+    viewModel: AuthViewModel = viewModel()
 ) {
-    // Observe the token from the AuthViewModel
     val token by viewModel.token.observeAsState("")
 
-    // If token is not empty, show the BottomNavBar, else don't show it
     Scaffold(
         bottomBar = {
-            if (token.isNotEmpty()) {  // Show BottomNavBar only after login
+            if (token.isNotEmpty()) {
                 BottomNavBar(navController = navController)
             }
         }
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = if (token.isNotEmpty()) Screen.MainPage.route else Screen.Login.route,  // Start from MainPage if logged in, else Login screen
-            modifier = Modifier.padding(paddingValues) // Ensure that content doesn't overlap with the navigation bar
+            startDestination = if (token.isNotEmpty()) Screen.MainPage.route else Screen.Login.route,
+            modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = Screen.Login.route) {
                 LoginScreen(navController = navController, onLoginSuccess = { newToken ->
@@ -98,6 +128,7 @@ fun Navigation(
         }
     }
 }
+
 
 
 

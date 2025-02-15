@@ -47,7 +47,6 @@ fun FavoriteMoviesScreen(
 
     println("Favorites state: $favorites")
 
-    // Call the function to fetch favorites if it's not already fetched
     LaunchedEffect(Unit) {
         if (token.isNotEmpty()) {
             println("Fetching favorites with token: $token")
@@ -62,7 +61,6 @@ fun FavoriteMoviesScreen(
     }
 
 
-    // Display the list of favorite movies
     LazyColumn {
         items(favorites) { movie ->
             MovieItem(movie , viewModel ,token)

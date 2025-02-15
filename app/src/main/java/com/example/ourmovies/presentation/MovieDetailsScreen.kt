@@ -44,16 +44,12 @@ fun MovieDetailsScreen(
     moviesViewModel: MoviesViewModel = viewModel(),
     favoriteViewModel: FavoriteViewModel = viewModel()
 ) {
-    // Observe the token from AuthViewModel
     val token by authViewModel.token.observeAsState("")
 
-    // Observe the movie details from MoviesViewModel
     val movieDetails by moviesViewModel.data.collectAsState()
 
-    // Find the movie based on movieId
     val movie = movieDetails.firstOrNull { it._id == movieId }
 
-    // Display content if movie is available, otherwise show loading screen
     if (movie != null) {
         MovieDetailsContent(movie, navController, favoriteViewModel, token)
     } else {
@@ -71,7 +67,6 @@ fun MovieDetailsContent(
 
     Column(modifier = Modifier.padding(16.dp)) {
 
-        // Movie Poster
         Image(
             painter = rememberImagePainter(movie.poster),
             contentDescription = "Movie Poster",
@@ -84,7 +79,6 @@ fun MovieDetailsContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Movie Title
         Text(
             text = movie.title,
             modifier = Modifier.fillMaxWidth()
@@ -92,7 +86,6 @@ fun MovieDetailsContent(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Add to Favorites Button
         Button(
             onClick = {
                 // Ensure the token is not empty before making the request
@@ -106,7 +99,6 @@ fun MovieDetailsContent(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Release Date
         Text(
             text = "Release Year: ${movie.releaseYear}",
             color = Color.Gray
@@ -114,7 +106,6 @@ fun MovieDetailsContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Back Button
         Button(onClick = { navController.popBackStack() }) {
             Text("Back")
         }

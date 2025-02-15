@@ -24,7 +24,6 @@ fun BottomNavBar(navController: NavController) {
         NavDestination.Profile
     )
 
-    // Bottom navigation bar
     NavigationBar {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
@@ -33,11 +32,9 @@ fun BottomNavBar(navController: NavController) {
             NavigationBarItem(
                 icon = { Icon(imageVector = screen.icon, contentDescription = null) },
                 label = { Text(screen.title) },
-                selected = currentDestination?.route == screen.route, // Simplified selection logic
+                selected = currentDestination?.route == screen.route,
                 onClick = {
-                    // Navigate to the selected screen
                     navController.navigate(screen.route) {
-                        // Ensure to pop back to the start destination and avoid duplicate navigation
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
