@@ -52,16 +52,7 @@ fun MainPage(viewModel: MoviesViewModel = viewModel(), navController: NavControl
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
-        // Button to navigate to FavoriteMoviesScreen
-        Button(
-            onClick = {
-                // Navigate to the FavoriteMoviesScreen
-                navController.navigate("FavoriteMoviesScreen")
-            },
-            modifier = Modifier.padding(bottom = 16.dp)
-        ) {
-            Text("Go to Favorite Movies")
-        }
+
 
         LazyColumn(
             state = listState,
