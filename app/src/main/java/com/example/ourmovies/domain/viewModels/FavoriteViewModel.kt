@@ -83,6 +83,8 @@ class FavoriteViewModel : ViewModel() {
         }
 
     }
+
+
     fun deleteFavoriteMovie(favoriteId: String, token: String) {
         viewModelScope.launch {
             try {
@@ -104,6 +106,9 @@ class FavoriteViewModel : ViewModel() {
                 Log.e("FavoriteViewModel", "Error: ${e.message}")
             }
         }
+    }
+    fun isMovieFavorited(movieId: String): Boolean {
+        return _favorites.value.any { it._id == movieId }
     }
 
 }

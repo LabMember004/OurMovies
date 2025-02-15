@@ -29,7 +29,6 @@
             </intent-filter>
         </activity>
 
-        <!-- BroadcastReceiver -->
 
     </application>
 </manifest>
