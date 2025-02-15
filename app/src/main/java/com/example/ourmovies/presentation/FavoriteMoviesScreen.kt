@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -32,8 +34,15 @@ import com.example.ourmovies.domain.viewModels.FavoriteViewModel
 import com.example.ourmovies.domain.viewModels.MoviesViewModel
 
 @Composable
-fun FavoriteMoviesScreen(viewModel: FavoriteViewModel = viewModel(), token: String , navController: NavController) {
-    val favorites =viewModel.favorites.value
+fun FavoriteMoviesScreen(
+    viewModel: FavoriteViewModel = viewModel(),
+    token: String,
+    navController: NavController
+) {
+    val favorites = viewModel.favorites.value
+
+
+
 
 
     println("Favorites state: $favorites")
@@ -47,6 +56,7 @@ fun FavoriteMoviesScreen(viewModel: FavoriteViewModel = viewModel(), token: Stri
         }
     }
 
+
     IconButton(onClick = { navController.popBackStack() }) {
         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
     }
@@ -55,13 +65,15 @@ fun FavoriteMoviesScreen(viewModel: FavoriteViewModel = viewModel(), token: Stri
     // Display the list of favorite movies
     LazyColumn {
         items(favorites) { movie ->
-            MovieItem(movie)
+            MovieItem(movie , viewModel ,token)
         }
     }
 }
 
 @Composable
-fun MovieItem(movie: Movies) {
+fun MovieItem(movie: Movies , viewModel: FavoriteViewModel, token: String) {
+
+
     Column(modifier = Modifier.padding(16.dp)) {
         Image(
             painter = rememberImagePainter(movie.poster), // Replace with the actual image URL or resource
@@ -83,6 +95,14 @@ fun MovieItem(movie: Movies) {
             text = "Release Date: ${movie.releaseYear}",
             color = Color.Gray
         )
+        Button(
+            onClick = {
+                viewModel.deleteFavoriteMovie(movie._id , token)
+            }
+        ) {
+            Text("Delete")
+        }
     }
-}
 
+
+}

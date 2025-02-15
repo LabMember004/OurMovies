@@ -21,6 +21,9 @@ class FavoriteViewModel : ViewModel() {
     private val _favorites = mutableStateOf<List<Movies>>(emptyList())
     val favorites: State<List<Movies>> get() = _favorites
 
+    private val _delete = mutableStateOf<List<Movies>>(emptyList())
+    val delete: State<List<Movies>> get() = _delete
+
     var isLoading by mutableStateOf(false)
 
 
@@ -80,4 +83,27 @@ class FavoriteViewModel : ViewModel() {
         }
 
     }
+    fun deleteFavoriteMovie(favoriteId: String, token: String) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitInstance.api.deleteFavorite(favoriteId,"Bearer $token" , )
+                Log.d("FavoriteViewModel", "Using token: Bearer $token")
+
+
+                if (response.isSuccessful) {
+                    // Successfully deleted, now update the favorites list
+                    _favorites.value = _favorites.value.filter { it._id != favoriteId }
+                    Log.d("FavoriteViewModel", "Movie deleted successfully")
+                } else {
+                    // Log error with response details
+                    val errorBody = response.errorBody()?.string() ?: "Unknown error"
+                    Log.e("FavoriteViewModel", "Failed to delete movie: ${response.code()} - $errorBody")
+                }
+            } catch (e: Exception) {
+                // Handle exceptions
+                Log.e("FavoriteViewModel", "Error: ${e.message}")
+            }
+        }
+    }
+
 }
