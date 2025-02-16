@@ -136,7 +136,7 @@ fun Navigation(
                 MainPage(navController = navController)
             }
             composable(route = Screen.Profile.route) {
-                val context = LocalContext.current // ✅ Get the current context
+                val context = LocalContext.current
                 Profile(context = context)             }
             composable(route = Screen.Register.route) {
                 Register(
