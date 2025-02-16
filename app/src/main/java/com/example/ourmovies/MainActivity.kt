@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,6 +38,7 @@ import com.example.ourmovies.presentation.LoginScreen
 import com.example.ourmovies.presentation.MainPage
 import com.example.ourmovies.presentation.MovieDetailsScreen
 import com.example.ourmovies.presentation.Profile
+import com.example.ourmovies.presentation.Register
 import com.example.ourmovies.presentation.navigation.Screen
 
 import com.example.ourmovies.ui.theme.OurMoviesTheme
@@ -55,10 +57,12 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     class NetworkChangeReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (!IsInternetAvailable.checkInternetAvailability(context)) {
-                Toast.makeText(context, "No internet connection available", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "No internet connection available", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
@@ -78,7 +82,6 @@ class MainActivity : ComponentActivity() {
     }
 
 }
-
 
 
 @Composable
@@ -101,10 +104,16 @@ fun Navigation(
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = Screen.Login.route) {
-                LoginScreen(navController = navController, onLoginSuccess = { newToken ->
-                    viewModel.setToken(newToken ?: "")
-                    navController.navigate(Screen.MainPage.route)
-                })
+                LoginScreen(
+                    navController = navController, onLoginSuccess = { newToken ->
+                        viewModel.setToken(newToken ?: "")
+                        navController.navigate(Screen.MainPage.route)
+
+                    },
+                    onNavigateToRegister = { navController.navigate(Screen.Register.route) }
+
+
+                )
             }
 
             composable(
@@ -112,7 +121,11 @@ fun Navigation(
                 arguments = listOf(navArgument("movieId") { type = NavType.StringType })
             ) { backStackEntry ->
                 val movieId = backStackEntry.arguments?.getString("movieId") ?: ""
-                MovieDetailsScreen(movieId, navController = navController, authViewModel = viewModel)
+                MovieDetailsScreen(
+                    movieId,
+                    navController = navController,
+                    authViewModel = viewModel
+                )
             }
 
             composable(route = Screen.FavoriteMovieScreen.route) {
@@ -122,16 +135,14 @@ fun Navigation(
             composable(route = Screen.MainPage.route) {
                 MainPage(navController = navController)
             }
-            composable(route=Screen.Profile.route) {
-                Profile(navController = navController)
+            composable(route = Screen.Profile.route) {
+                val context = LocalContext.current // ✅ Get the current context
+                Profile(context = context)             }
+            composable(route = Screen.Register.route) {
+                Register(
+                    navController = navController,
+                    onNavigateBack = {navController.navigate(Screen.Login.route)})
             }
         }
     }
 }
-
-
-
-
-
-
-

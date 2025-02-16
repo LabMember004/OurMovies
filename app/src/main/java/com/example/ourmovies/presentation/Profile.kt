@@ -1,10 +1,28 @@
 package com.example.ourmovies.presentation
 
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
+import android.content.Context
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
-fun Profile(navController: NavController) {
-    Text("Welcome")
+fun Profile(context: Context) {
+    val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+    val userName = sharedPreferences.getString("USER_NAME", "Unknown User") ?: "Unknown User"
+    val userEmail = sharedPreferences.getString("USER_EMAIL", "Unknown Email") ?: "Unknown Email"
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = "Name: $userName")
+        Text(text = "Email: $userEmail")
+    }
 }

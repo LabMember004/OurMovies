@@ -1,11 +1,14 @@
 package com.example.ourmovies.presentation
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -13,7 +16,7 @@ import androidx.navigation.NavController
 import com.example.ourmovies.domain.viewModels.LoginViewModel
 
 @Composable
-fun LoginScreen(navController: NavController, onLoginSuccess: (String) -> Unit) {
+fun LoginScreen(navController: NavController, onLoginSuccess: (String) -> Unit , onNavigateToRegister : () -> Unit) {
     val viewModel: LoginViewModel = viewModel()
 
     var email by remember { mutableStateOf("") }
@@ -24,7 +27,8 @@ fun LoginScreen(navController: NavController, onLoginSuccess: (String) -> Unit) 
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         TextField(
             value = email,
@@ -40,6 +44,7 @@ fun LoginScreen(navController: NavController, onLoginSuccess: (String) -> Unit) 
             onValueChange = { password = it },
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -59,6 +64,17 @@ fun LoginScreen(navController: NavController, onLoginSuccess: (String) -> Unit) 
         ) {
             Text("Login")
         }
+
+        Text("Dont have an account?")
+
+        Text(
+            text = "Register",
+            color = Color.Blue,
+            fontWeight = FontWeight.Bold,
+            modifier =  Modifier.clickable {
+                onNavigateToRegister()
+            }
+        )
 
         if (viewModel.isLoading) {
             CircularProgressIndicator()

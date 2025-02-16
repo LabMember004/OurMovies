@@ -23,9 +23,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ourmovies.domain.viewModels.RegisterViewModel
 
 import android.util.Patterns
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavController
 
 @Composable
-fun Register() {
+fun Register(navController: NavController, onNavigateBack:() -> Unit) {
     val viewModel: RegisterViewModel = viewModel()
 
     var name by remember { mutableStateOf("") }
@@ -35,6 +39,7 @@ fun Register() {
 
     var isPasswordMatch by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf("") }
+    var onSuccessMessage by remember { mutableStateOf("") }
 
     viewModel.name = name
     viewModel.email = email
@@ -45,7 +50,8 @@ fun Register() {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
 
         TextField(
@@ -73,7 +79,8 @@ fun Register() {
             onValueChange = { password = it },
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
-            singleLine = true
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -83,7 +90,8 @@ fun Register() {
             onValueChange = { confirmPassword = it },
             label = { Text("Confirm Password") },
             visualTransformation = PasswordVisualTransformation(),
-            singleLine = true
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -101,6 +109,8 @@ fun Register() {
                     errorMessage = "All fields are required"
                 } else {
                     viewModel.registerUser(viewModel.name, viewModel.email, viewModel.password, viewModel.confirmPassword)
+                    onSuccessMessage = "Registration Successful"
+                    errorMessage = ""
                 }
             },
             modifier = Modifier.fillMaxWidth()
@@ -111,5 +121,23 @@ fun Register() {
         if (errorMessage.isNotEmpty()) {
             Text(text = errorMessage, color = Color.Red)
         }
+
+        Text("Already have an account?")
+
+        Text(
+            text = "Login",
+            color = Color.Blue,
+            fontWeight = FontWeight.Bold,
+            modifier =  Modifier.clickable {
+                onNavigateBack()
+            }
+
+
+        )
+        if (onSuccessMessage.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text (text = onSuccessMessage , color = Color.Green)
+        }
     }
 }
+
