@@ -84,14 +84,14 @@ fun MovieItem(movie: Movies, viewModel: FavoriteViewModel, token: String) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Movie Title and Delete Icon
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
-                modifier = Modifier.weight(1f) // Makes the title take available space
+                modifier = Modifier.weight(1f)
             ) {
                 Text(
                     text = movie.title,
