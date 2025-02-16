@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModel
 import com.example.ourmovies.data.RegisterRequest
 import com.example.ourmovies.data.RegisterResponse
 import com.example.ourmovies.domain.RetrofitInstance
-import dagger.hilt.android.internal.Contexts.getApplication
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
