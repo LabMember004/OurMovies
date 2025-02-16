@@ -1,19 +1,23 @@
 package com.example.ourmovies.domain.viewModels
 
+import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import com.example.ourmovies.data.RegisterRequest
 import com.example.ourmovies.data.RegisterResponse
 import com.example.ourmovies.domain.RetrofitInstance
+import dagger.hilt.android.internal.Contexts.getApplication
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class RegisterViewModel : ViewModel() {
+class RegisterViewModel(application: Application) : AndroidViewModel(application) {
     var name by mutableStateOf("")
     var email by mutableStateOf("")
     var password by mutableStateOf("")
@@ -40,6 +44,7 @@ class RegisterViewModel : ViewModel() {
             override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
                 if (response.isSuccessful) {
                     Log.d("RegisterViewModel", "Registration successful: ${response.body()}")
+                    saveUserData(name, email)
                     Log.d("RegisterRequest", "Name: ${registerRequest.name}, Email: ${registerRequest.email}, Password: ${registerRequest.password}, ConfirmPassword: ${registerRequest.confirmPassword}")
                 } else {
                     val errorBody = response.errorBody()?.string() ?: "No error body"
@@ -52,6 +57,13 @@ class RegisterViewModel : ViewModel() {
                 Log.e("RegisterViewModel", "Failure: ${t.message}")
             }
         })
+    }
+    private fun saveUserData(name: String, email: String) {
+        val sharedPreferences = getApplication<Application>().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit()
+            .putString("USER_NAME", name)
+            .putString("USER_EMAIL", email)
+            .apply()
     }
 }
 

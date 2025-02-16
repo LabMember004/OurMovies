@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -135,7 +136,8 @@ fun Navigation(
                 MainPage(navController = navController)
             }
             composable(route = Screen.Profile.route) {
-                Profile(navController = navController)
+                val context = LocalContext.current
+                Profile(context = context)
             }
             composable(route = Screen.Register.route) {
                 Register(
