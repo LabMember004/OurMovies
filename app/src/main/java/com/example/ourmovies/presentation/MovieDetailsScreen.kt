@@ -83,7 +83,6 @@ fun MovieDetailsContent(
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        // Movie Poster
         Image(
             painter = rememberImagePainter(movie.poster),
             contentDescription = "Movie Poster",
@@ -96,7 +95,6 @@ fun MovieDetailsContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Title and Favorite Icon
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -129,7 +127,6 @@ fun MovieDetailsContent(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Movie Details - Release Year, Rating, Runtime
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
@@ -163,7 +160,6 @@ fun MovieDetailsContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Back Button
         Button(
             onClick = { navController.popBackStack() },
             modifier = Modifier.align(Alignment.CenterHorizontally)

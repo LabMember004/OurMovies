@@ -71,7 +71,6 @@ fun MovieItem(movie: Movies, viewModel: FavoriteViewModel, token: String) {
             .padding(16.dp)
             .fillMaxWidth()
     ) {
-        // Movie Poster
         Image(
             painter = rememberImagePainter(movie.poster),
             contentDescription = "Movie Poster",
@@ -103,7 +102,6 @@ fun MovieItem(movie: Movies, viewModel: FavoriteViewModel, token: String) {
                 )
             }
 
-            // Delete Icon
             IconButton(
                 onClick = { viewModel.deleteFavoriteMovie(movie._id, token) },
                 modifier = Modifier.size(32.dp) // Make the icon bigger

@@ -75,7 +75,7 @@ class FavoriteViewModel : ViewModel() {
                     _favorites.value = emptyList()
                 }
             } catch (e: Exception) {
-                println("Error fetching favorites: ${e.message}")  // Log any exceptions
+                println("Error fetching favorites: ${e.message}")
                 _favorites.value = emptyList()
             } finally {
                 isLoading = false
@@ -93,16 +93,15 @@ class FavoriteViewModel : ViewModel() {
 
 
                 if (response.isSuccessful) {
-                    // Successfully deleted, now update the favorites list
+
                     _favorites.value = _favorites.value.filter { it._id != favoriteId }
                     Log.d("FavoriteViewModel", "Movie deleted successfully")
                 } else {
-                    // Log error with response details
+
                     val errorBody = response.errorBody()?.string() ?: "Unknown error"
                     Log.e("FavoriteViewModel", "Failed to delete movie: ${response.code()} - $errorBody")
                 }
             } catch (e: Exception) {
-                // Handle exceptions
                 Log.e("FavoriteViewModel", "Error: ${e.message}")
             }
         }

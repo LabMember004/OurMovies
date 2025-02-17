@@ -7,6 +7,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.ourmovies.domain.ProfileImagePicker
+import com.example.ourmovies.domain.navBar.NavDestination
 
 @Composable
 fun Profile(context: Context) {
@@ -20,7 +22,7 @@ fun Profile(context: Context) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
+        ProfileImagePicker(context)
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Name: $userName")
         Text(text = "Email: $userEmail")

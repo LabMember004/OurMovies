@@ -23,7 +23,7 @@ class LoginViewModel : ViewModel() {
     fun loginUser(email: String, password: String, onResult: (String?) -> Unit) {
         if (email.isEmpty() || password.isEmpty()) {
             errorMessage = "All fields are required"
-            onResult(null) // Notify login failure
+            onResult(null)
             return
         }
 
@@ -38,12 +38,12 @@ class LoginViewModel : ViewModel() {
                     val loginResponse = response.body()
                     token = loginResponse?.token
                     Log.d("LoginViewModel", "Login Successful: Token = $token")
-                    onResult(token) // ✅ Pass token back to LoginScreen
+                    onResult(token)
                 } else {
                     val errorBody = response.errorBody()?.string() ?: "Unknown error"
                     errorMessage = "Login failed: $errorBody"
                     Log.e("LoginViewModel", "Login failed: $errorBody")
-                    onResult(null) // Notify login failure
+                    onResult(null)
                 }
             }
 
@@ -51,7 +51,7 @@ class LoginViewModel : ViewModel() {
                 isLoading = false
                 errorMessage = "Network error: ${t.message}"
                 Log.e("LoginViewModel", "Failure: ${t.message}")
-                onResult(null) // Notify login failure
+                onResult(null)
             }
         })
     }
