@@ -37,13 +37,13 @@ class MoviesViewModel: ViewModel() {
         fetchData(currentPage)
     }
 
-    private fun fetchData(page: Int) {
+    private fun fetchData(page: Int , genre: String? = null, releaseYear: Int? =null , query: String? =null) {
         if (isLoading || isEndReached) return
 
         isLoading = true
         viewModelScope.launch {
             try {
-                val response = repository.getMovieList(page)
+                val response = repository.getMovieList(page,genre , releaseYear, query)
                 if (response.data.isNotEmpty()) {
                     _data.value += response.data
                     currentPage = page
@@ -56,6 +56,12 @@ class MoviesViewModel: ViewModel() {
                 isLoading = false
             }
         }
+    }
+    fun applyFilters(genre: String?, releaseYear: Int?, query: String?) {
+        currentPage = 1
+        isEndReached = false
+        _data.value = emptyList()
+        fetchData(currentPage, query = query, genre = genre, releaseYear = releaseYear)
     }
 
     fun loadNextPage() {

@@ -22,8 +22,12 @@ import retrofit2.http.Query
 interface Api {
     @GET("movies")
     suspend fun getMovies(
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("genre") genre: String? = null,
+        @Query("releaseYear") releaseYear: Int? = null,
+        @Query("query") query: String? = null
     ): MoviesResponse
+
 
     @POST("auth/register")
     fun register(@Body registerRequest: RegisterRequest): Call<RegisterResponse>
