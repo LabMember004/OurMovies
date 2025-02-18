@@ -34,6 +34,7 @@ import com.example.ourmovies.domain.network.IsInternetAvailable
 import com.example.ourmovies.domain.viewModels.AuthViewModel
 import com.example.ourmovies.presentation.Browse
 import com.example.ourmovies.presentation.FavoriteMoviesScreen
+import com.example.ourmovies.presentation.Home
 
 import com.example.ourmovies.presentation.LoginScreen
 import com.example.ourmovies.presentation.MovieDetailsScreen
@@ -133,7 +134,7 @@ fun Navigation(
             }
 
             composable(route = Screen.Browse.route) {
-                Browse(navController = navController)
+                Browse(navController = navController )
             }
             composable(route = Screen.Profile.route) {
                 val context = LocalContext.current
@@ -143,6 +144,9 @@ fun Navigation(
                 Register(
                     navController = navController,
                     onNavigateBack = {navController.navigate(Screen.Login.route)})
+            }
+            composable(route = Screen.Home.route) {
+                Home()
             }
         }
     }

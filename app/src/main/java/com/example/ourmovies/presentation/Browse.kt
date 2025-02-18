@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,11 +45,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.ourmovies.data.Movies
-
+import com.example.ourmovies.domain.viewModels.AuthViewModel
+import com.example.ourmovies.domain.viewModels.FavoriteViewModel
 
 
 @Composable
-fun Browse(viewModel: MoviesViewModel = viewModel(), navController: NavController) {
+fun Browse(viewModel: MoviesViewModel = viewModel(), favoriteViewModel: FavoriteViewModel = viewModel(), authViewModel: AuthViewModel = viewModel(), navController: NavController ) {
     val data by viewModel.data.collectAsState()
     val isLoading = viewModel.isLoading
     val isEndReached = viewModel.isEndReached
@@ -59,6 +61,10 @@ fun Browse(viewModel: MoviesViewModel = viewModel(), navController: NavControlle
     var selectedGenre by remember { mutableStateOf("") }
     var selectedYear by remember { mutableStateOf<Int?>(null) }
     var areFiltersVisible by remember { mutableStateOf(true) }
+
+  
+
+
 
     LaunchedEffect(searchQuery, selectedGenre, selectedYear) {
         viewModel.applyFilters(query = searchQuery, genre = selectedGenre, releaseYear = selectedYear)
@@ -126,8 +132,7 @@ fun Browse(viewModel: MoviesViewModel = viewModel(), navController: NavControlle
         Box(modifier = Modifier.fillMaxWidth()) {
             IconButton(
                 onClick = { areFiltersVisible = !areFiltersVisible },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
+                modifier = Modifier.align(Alignment.BottomCenter)
             ) {
                 Icon(
                     imageVector = if (areFiltersVisible) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,

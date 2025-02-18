@@ -8,6 +8,7 @@ import com.example.ourmovies.data.Movies
 import com.example.ourmovies.data.MoviesResponse
 import com.example.ourmovies.data.RegisterRequest
 import com.example.ourmovies.data.RegisterResponse
+import com.example.ourmovies.data.SectionsResponse
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -28,6 +29,8 @@ interface Api {
         @Query("query") query: String? = null
     ): MoviesResponse
 
+    @GET("movies/sections")
+    suspend fun getSections(): SectionsResponse
 
     @POST("auth/register")
     fun register(@Body registerRequest: RegisterRequest): Call<RegisterResponse>

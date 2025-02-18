@@ -31,7 +31,6 @@ class FavoriteViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 if (token.isNotEmpty()) {
-                    // Log the request body
                     val favoriteRequest = FavoriteRequest(movieId)
                     Log.d("MoviesViewModel", "Sending request: $favoriteRequest")
 
@@ -96,6 +95,7 @@ class FavoriteViewModel : ViewModel() {
 
                     _favorites.value = _favorites.value.filter { it._id != favoriteId }
                     Log.d("FavoriteViewModel", "Movie deleted successfully")
+                    getFavorites(token)
                 } else {
 
                     val errorBody = response.errorBody()?.string() ?: "Unknown error"

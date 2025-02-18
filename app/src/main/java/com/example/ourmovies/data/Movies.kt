@@ -7,5 +7,6 @@ data class Movies(
     val poster: String,
     val rating: Double,
     val runtime: Int,
+    val genres: List<String>
 
 )

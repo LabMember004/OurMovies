@@ -22,6 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -60,6 +61,12 @@ fun MovieDetailsScreen(
 
     val movie = movieDetails.firstOrNull { it._id == movieId }
 
+    LaunchedEffect(token) {
+        if (token.isNotEmpty()) {
+            favoriteViewModel.getFavorites(token)
+        }
+    }
+
     if (movie != null) {
         favoriteViewModel.getFavorites(token)
         MovieDetailsContent(movie, navController, favoriteViewModel, token)
@@ -75,7 +82,7 @@ fun MovieDetailsContent(
     viewModel: FavoriteViewModel,
     token: String
 ) {
-    var isFavorited by remember { mutableStateOf(viewModel.isMovieFavorited(movie._id)) }
+    var isFavorited by remember {mutableStateOf(viewModel.isMovieFavorited(movie._id))}
     val heartIconColor = if (isFavorited) Color.Red else Color.Gray
 
     Column(
@@ -153,6 +160,10 @@ fun MovieDetailsContent(
 
                 Text(
                     text = "Runtime: ${movie.runtime} min",
+                    color = Color.Gray,
+                )
+                Text(
+                    text = "Genres: ${movie.genres}",
                     color = Color.Gray,
                 )
             }
