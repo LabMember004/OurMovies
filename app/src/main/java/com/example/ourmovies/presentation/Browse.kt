@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
@@ -49,7 +48,7 @@ import com.example.ourmovies.data.Movies
 
 
 @Composable
-fun MainPage(viewModel: MoviesViewModel = viewModel(), navController: NavController) {
+fun Browse(viewModel: MoviesViewModel = viewModel(), navController: NavController) {
     val data by viewModel.data.collectAsState()
     val isLoading = viewModel.isLoading
     val isEndReached = viewModel.isEndReached

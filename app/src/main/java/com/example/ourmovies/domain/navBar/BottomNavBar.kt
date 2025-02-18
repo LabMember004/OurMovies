@@ -48,7 +48,7 @@ fun BottomNavBar(navController: NavController) {
 }
 
 sealed class NavDestination(val title: String, val route: String, val icon: ImageVector) {
-    object Home : NavDestination(title = "Home", route = "mainPage", icon = Icons.Filled.Home)
+    object Home : NavDestination(title = "Browse", route = "browse", icon = Icons.Filled.Home)
     object Favorites : NavDestination(title = "Favorites", route = "FavoriteMoviesScreen", icon = Icons.Filled.Favorite)
     object Profile : NavDestination(title = "Profile", route = "profile", icon = Icons.Filled.Person)
 }

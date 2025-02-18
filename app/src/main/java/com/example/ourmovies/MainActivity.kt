@@ -32,10 +32,10 @@ import androidx.navigation.navArgument
 import com.example.ourmovies.domain.navBar.BottomNavBar
 import com.example.ourmovies.domain.network.IsInternetAvailable
 import com.example.ourmovies.domain.viewModels.AuthViewModel
+import com.example.ourmovies.presentation.Browse
 import com.example.ourmovies.presentation.FavoriteMoviesScreen
 
 import com.example.ourmovies.presentation.LoginScreen
-import com.example.ourmovies.presentation.MainPage
 import com.example.ourmovies.presentation.MovieDetailsScreen
 import com.example.ourmovies.presentation.Profile
 import com.example.ourmovies.presentation.Register
@@ -100,14 +100,14 @@ fun Navigation(
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = if (token.isNotEmpty()) Screen.MainPage.route else Screen.Login.route,
+            startDestination = if (token.isNotEmpty()) Screen.Browse.route else Screen.Login.route,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = Screen.Login.route) {
                 LoginScreen(
                     navController = navController, onLoginSuccess = { newToken ->
                         viewModel.setToken(newToken ?: "")
-                        navController.navigate(Screen.MainPage.route)
+                        navController.navigate(Screen.Browse.route)
 
                     },
                     onNavigateToRegister = { navController.navigate(Screen.Register.route) }
@@ -132,8 +132,8 @@ fun Navigation(
                 FavoriteMoviesScreen(token = token, navController = navController)
             }
 
-            composable(route = Screen.MainPage.route) {
-                MainPage(navController = navController)
+            composable(route = Screen.Browse.route) {
+                Browse(navController = navController)
             }
             composable(route = Screen.Profile.route) {
                 val context = LocalContext.current
