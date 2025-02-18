@@ -1,8 +1,14 @@
 package com.example.ourmovies.presentation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +20,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -28,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -36,6 +45,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.ourmovies.data.Movies
+
+
 
 @Composable
 fun MainPage(viewModel: MoviesViewModel = viewModel(), navController: NavController) {
@@ -46,15 +57,13 @@ fun MainPage(viewModel: MoviesViewModel = viewModel(), navController: NavControl
     val listState = rememberLazyListState()
 
     var searchQuery by remember { mutableStateOf("") }
-
-    var selectedFilter by remember { mutableStateOf("") }
-    var selectedYear by remember { mutableStateOf<Int?>(null) }
     var selectedGenre by remember { mutableStateOf("") }
+    var selectedYear by remember { mutableStateOf<Int?>(null) }
+    var areFiltersVisible by remember { mutableStateOf(true) }
 
-    LaunchedEffect(searchQuery) {
-        viewModel.applyFilters(query = searchQuery, genre = null, releaseYear = null)
+    LaunchedEffect(searchQuery, selectedGenre, selectedYear) {
+        viewModel.applyFilters(query = searchQuery, genre = selectedGenre, releaseYear = selectedYear)
     }
-
 
     LaunchedEffect(listState.firstVisibleItemIndex) {
         val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
@@ -68,44 +77,66 @@ fun MainPage(viewModel: MoviesViewModel = viewModel(), navController: NavControl
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
-
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
             label = { Text("Search Movies") },
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         )
-        LazyRow(
-            modifier = Modifier.padding(bottom = 16.dp)
+
+        AnimatedVisibility(
+            visible = areFiltersVisible,
+            enter = fadeIn() + slideInVertically(initialOffsetY = { -it }),
+            exit = fadeOut() + slideOutVertically(targetOffsetY = { -it })
         ) {
-            items(listOf("Action", "Drama", "Comedy", "Horror", "Romance")) { genre ->
-                Button(
-                    onClick = {
-                        selectedFilter = genre
-                        viewModel.applyFilters(query = searchQuery, genre = genre, releaseYear = null)
-                    },
-                    modifier = Modifier.padding(end = 8.dp)
+            Column {
+                LazyRow(
+                    modifier = Modifier.padding(bottom = 16.dp)
                 ) {
-                    Text(text = genre)
+                    items(listOf("Action", "Drama", "Comedy", "Horror", "Romance")) { genre ->
+                        Button(
+                            onClick = {
+                                selectedGenre = genre
+                                viewModel.applyFilters(query = searchQuery, genre = genre, releaseYear = selectedYear)
+                            },
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            Text(text = genre)
+                        }
+                    }
+                }
+
+                LazyRow(
+                    modifier = Modifier.padding(bottom = 16.dp)
+                ) {
+                    items((1990..2024).toList()) { year ->
+                        Button(
+                            onClick = {
+                                selectedYear = year
+                                viewModel.applyFilters(query = searchQuery, genre = selectedGenre, releaseYear = year)
+                            },
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            Text(text = year.toString())
+                        }
+                    }
                 }
             }
         }
 
-        LazyRow(
-            modifier = Modifier.padding(bottom = 16.dp)
-        ) {
-            items((1990..2024).toList()) { year ->
-                Button(
-                    onClick = {
-                        selectedYear = year
-                        viewModel.applyFilters(query = searchQuery, genre = selectedGenre, releaseYear = year)
-                    },
-                    modifier = Modifier.padding(end = 8.dp)
-                ) {
-                    Text(text = year.toString())
-                }
+        Box(modifier = Modifier.fillMaxWidth()) {
+            IconButton(
+                onClick = { areFiltersVisible = !areFiltersVisible },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+            ) {
+                Icon(
+                    imageVector = if (areFiltersVisible) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                    contentDescription = "Toggle Filters"
+                )
             }
         }
+
         LazyColumn(
             state = listState,
             modifier = Modifier.padding(16.dp)
@@ -122,7 +153,6 @@ fun MainPage(viewModel: MoviesViewModel = viewModel(), navController: NavControl
         }
     }
 }
-
 
 @Composable
 fun MovieCard(movie: Movies, navController: NavController) {
@@ -153,8 +183,6 @@ fun MovieCard(movie: Movies, navController: NavController) {
                 Text(text = "Rating: ${movie.rating}")
             }
             Text(text = "Runtime: ${movie.runtime} min")
-
-
         }
     }
 }
