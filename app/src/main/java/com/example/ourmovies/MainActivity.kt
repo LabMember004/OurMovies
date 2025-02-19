@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontVariation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -41,6 +42,7 @@ import com.example.ourmovies.presentation.LoginScreen
 import com.example.ourmovies.presentation.MovieDetailsScreen
 import com.example.ourmovies.presentation.Profile
 import com.example.ourmovies.presentation.Register
+import com.example.ourmovies.presentation.SettingsScreen
 import com.example.ourmovies.presentation.navigation.Screen
 
 import com.example.ourmovies.ui.theme.OurMoviesTheme
@@ -139,7 +141,7 @@ fun Navigation(
             }
             composable(route = Screen.Profile.route) {
 
-                Profile(token = token )
+                Profile(navController = navController)
             }
             composable(route = Screen.Register.route) {
                 Register(
@@ -148,6 +150,9 @@ fun Navigation(
             }
             composable(route = Screen.Home.route) {
                 Home()
+            }
+            composable(route = Screen.Setting.route) {
+                SettingsScreen(token = token , navController = navController)
             }
         }
     }

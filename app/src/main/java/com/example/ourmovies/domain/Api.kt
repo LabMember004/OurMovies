@@ -11,6 +11,8 @@ import com.example.ourmovies.data.RegisterResponse
 import com.example.ourmovies.data.SectionsResponse
 import com.example.ourmovies.data.UpdateEmailRequest
 import com.example.ourmovies.data.UpdateEmailResponse
+import com.example.ourmovies.data.UpdatePasswordRequest
+import com.example.ourmovies.data.UpdatePasswordResponse
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -62,4 +64,10 @@ interface Api {
         @Header("Authorization") token: String,
         @Body request : UpdateEmailRequest
     ): Response<UpdateEmailResponse>
+
+    @PATCH("me/password")
+    suspend fun updatePassword(
+        @Header("Authorization") token: String,
+        @Body request: UpdatePasswordRequest
+    ): Response<UpdatePasswordResponse>
 }
