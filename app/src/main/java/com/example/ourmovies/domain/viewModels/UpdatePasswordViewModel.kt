@@ -24,7 +24,8 @@ class UpdatePasswordViewModel: ViewModel() {
         token: String,
         currentPassword: String,
         newPassword: String,
-        confirmNewPassword: String
+        confirmNewPassword: String,
+        callback: (Boolean,String) -> Unit
     ) {
         viewModelScope.launch {
             try {
@@ -50,6 +51,8 @@ class UpdatePasswordViewModel: ViewModel() {
                     if (response.isSuccessful) {
                         _updatePasswordResult.value =
                             Result.Success("Password updated successfully.")
+                        callback(true, "Password updated successfully.")
+
                     } else {
                         _updatePasswordResult.value =
                             Result.Error("Failed to update password. Code: ${response.code()}")

@@ -20,11 +20,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.ourmovies.domain.viewModels.UpdateEmailViewModel
 import com.example.ourmovies.domain.viewModels.UpdatePasswordViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun UpdatePasswordScreen(
@@ -35,8 +38,11 @@ fun UpdatePasswordScreen(
     var currentPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     var confirmNewPassword by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf("") }
     var successMessage by remember { mutableStateOf("") } // Success message state
+    var isLoading by remember { mutableStateOf(false) } // For loading state
+
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
     Column(
         modifier = Modifier
@@ -72,24 +78,34 @@ fun UpdatePasswordScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (errorMessage.isNotEmpty()) {
-            Text(text = errorMessage, color = Color.Red)
-        }
-
         if (successMessage.isNotEmpty()) {
-            Text(text = successMessage, color = Color.Green) // Display success message
+            Text(text = successMessage, color = if (successMessage.startsWith("Success")) Color.Green else Color.Red)
         }
 
         Button(
             onClick = {
-                passwordViewModel.updatePassword(
-                    token = token,
-                    currentPassword = currentPassword,
-                    newPassword = newPassword,
-                    confirmNewPassword = confirmNewPassword
-                )
-                successMessage = "Password successfully changed" // Set success message
-                navController.navigate("profile")
+                if (currentPassword.isNotEmpty() && newPassword.isNotEmpty() && confirmNewPassword.isNotEmpty() && token.isNotEmpty()) {
+                    isLoading = true
+                    passwordViewModel.updatePassword(
+                        token,
+                        currentPassword,
+                        newPassword,
+                        confirmNewPassword
+                    ) { isSuccess, message ->
+                        if (isSuccess) {
+                            sharedPreferences.edit().putString("USER_PASSWORD", newPassword).apply()
+                            successMessage = "Success: Password successfully changed"
+
+                                navController.navigate("profile")
+
+                        } else {
+                            successMessage = "Error: $message"
+                        }
+                        isLoading = false
+                    }
+                } else {
+                    successMessage = "Error: All fields and token are required"
+                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -97,4 +113,3 @@ fun UpdatePasswordScreen(
         }
     }
 }
-

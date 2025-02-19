@@ -29,7 +29,7 @@ import com.example.ourmovies.domain.viewModels.UpdatePasswordViewModel
 
 @Composable
 fun SettingsScreen(
-    token: String,
+
     navController: NavController
 ) {
 
@@ -43,7 +43,6 @@ fun SettingsScreen(
         Text(text = "Settings", style = MaterialTheme.typography.headlineLarge)
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Buttons for selecting update options
         Button(
             onClick = { navController.navigate("updateEmail") },
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)

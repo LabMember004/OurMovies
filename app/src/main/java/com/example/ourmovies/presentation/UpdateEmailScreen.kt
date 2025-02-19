@@ -33,10 +33,8 @@ fun UpdateEmailScreen(
     profileViewModel: UpdateEmailViewModel = viewModel()
 ) {
     var email by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf("") }
-    var successMessage by remember { mutableStateOf("") } // Success message state
+    var message by remember { mutableStateOf("") } // Combined message state (success/error)
 
-    // Access shared preferences
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
@@ -58,31 +56,30 @@ fun UpdateEmailScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (errorMessage.isNotEmpty()) {
-            Text(text = errorMessage, color = Color.Red)
-        }
-
-        if (successMessage.isNotEmpty()) {
-            Text(text = successMessage, color = Color.Green) // Display success message
+        // Display the message (either success or error)
+        if (message.isNotEmpty()) {
+            val messageColor = if (message.startsWith("Success")) Color.Green else Color.Red
+            Text(text = message, color = messageColor)
         }
 
         Button(
             onClick = {
                 if (email.isNotEmpty() && token.isNotEmpty()) {
-                    profileViewModel.updateEmail(token, email) { isSuccess, message ->
+                    profileViewModel.updateEmail(token, email) { isSuccess, responseMessage ->
                         if (isSuccess) {
-                            // Update shared preferences with the new email
+                            // Update shared preferences or perform additional actions
                             sharedPreferences.edit().putString("USER_EMAIL", email).apply()
-                            // Set success message
-                            successMessage = "Email successfully changed"
-                            // Navigate back to the profile page
+                            // Set the success message
+                            message = "Success: Email successfully changed"
+                            // Navigate back to the profile screen
                             navController.navigate("profile")
                         } else {
-                            errorMessage = message
+                            // Set the error message
+                            message = responseMessage
                         }
                     }
                 } else {
-                    errorMessage = "Email and token are required"
+                    message = "Email and token are required"
                 }
             },
             modifier = Modifier.fillMaxWidth()
@@ -91,4 +88,5 @@ fun UpdateEmailScreen(
         }
     }
 }
+
 

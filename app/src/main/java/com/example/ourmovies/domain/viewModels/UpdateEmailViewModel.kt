@@ -23,8 +23,8 @@ class UpdateEmailViewModel: ViewModel() {
                     if (response.isSuccessful) {
                         callback(true, "Email updated successfully!")
                     } else {
-                        val errorBody = response.errorBody()?.string() ?: "Unknown error"
-                        callback(false, "Failed to update email: $errorBody")
+
+                        callback(false, "Failed to update email , new email cannot be the current email")
                     }
                 } else {
                     callback(false, "Token is missing or invalid.")
