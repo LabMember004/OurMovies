@@ -1,6 +1,7 @@
 package com.example.ourmovies.presentation
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -24,14 +26,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.ourmovies.domain.viewModels.DeleteViewModel
 import com.example.ourmovies.domain.viewModels.UpdateEmailViewModel
 import com.example.ourmovies.domain.viewModels.UpdatePasswordViewModel
 
+
+
 @Composable
 fun SettingsScreen(
-
-    navController: NavController
+    token: String,
+    navController: NavController,
+    profileViewModel: DeleteViewModel = viewModel() // Inject ProfileViewModel
 ) {
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -45,7 +52,9 @@ fun SettingsScreen(
 
         Button(
             onClick = { navController.navigate("updateEmail") },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
         ) {
             Text(text = "Update Email")
         }
@@ -56,8 +65,39 @@ fun SettingsScreen(
             Text(text = "Update Password")
         }
 
+        Button(
+            onClick = {
+                navController.navigate("login") {
+                    popUpTo("settings") { inclusive = true }
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Logout")
+        }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                profileViewModel.deleteProfile(
+                    token,
+                    onSuccess = {
+                        Toast.makeText(context, "Profile deleted", Toast.LENGTH_SHORT).show()
+                        navController.navigate("login") { popUpTo("settings") { inclusive = true } }
+                    },
+                    onError = { error ->
+                        Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                    }
+                )
+            },
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Delete Profile")
+        }
     }
 }
+
 
 

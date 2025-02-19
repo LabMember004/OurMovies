@@ -154,7 +154,7 @@ fun Navigation(
                 Home()
             }
             composable(route = Screen.Setting.route) {
-                SettingsScreen( navController = navController)
+                SettingsScreen( token = token, navController = navController)
             }
             composable(route = Screen.UpdateEmail.route) {
                 UpdateEmailScreen(token = token , navController = navController)

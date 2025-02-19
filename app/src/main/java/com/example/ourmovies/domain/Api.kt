@@ -70,4 +70,9 @@ interface Api {
         @Header("Authorization") token: String,
         @Body request: UpdatePasswordRequest
     ): Response<UpdatePasswordResponse>
+
+    @DELETE("me")
+    suspend fun deleteProfile(
+        @Header("Authorization") token: String
+    ): Response<Unit>
 }

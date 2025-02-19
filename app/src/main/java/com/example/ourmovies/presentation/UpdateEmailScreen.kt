@@ -33,7 +33,7 @@ fun UpdateEmailScreen(
     profileViewModel: UpdateEmailViewModel = viewModel()
 ) {
     var email by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf("") } // Combined message state (success/error)
+    var message by remember { mutableStateOf("") }
 
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
@@ -56,7 +56,6 @@ fun UpdateEmailScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Display the message (either success or error)
         if (message.isNotEmpty()) {
             val messageColor = if (message.startsWith("Success")) Color.Green else Color.Red
             Text(text = message, color = messageColor)
@@ -67,14 +66,11 @@ fun UpdateEmailScreen(
                 if (email.isNotEmpty() && token.isNotEmpty()) {
                     profileViewModel.updateEmail(token, email) { isSuccess, responseMessage ->
                         if (isSuccess) {
-                            // Update shared preferences or perform additional actions
                             sharedPreferences.edit().putString("USER_EMAIL", email).apply()
-                            // Set the success message
                             message = "Success: Email successfully changed"
-                            // Navigate back to the profile screen
                             navController.navigate("profile")
                         } else {
-                            // Set the error message
+
                             message = responseMessage
                         }
                     }

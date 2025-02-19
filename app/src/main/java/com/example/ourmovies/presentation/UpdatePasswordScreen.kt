@@ -41,6 +41,7 @@ fun UpdatePasswordScreen(
     var successMessage by remember { mutableStateOf("") } // Success message state
     var isLoading by remember { mutableStateOf(false) } // For loading state
 
+
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
@@ -53,6 +54,7 @@ fun UpdatePasswordScreen(
     ) {
         Text(text = "Update Password", style = MaterialTheme.typography.headlineLarge)
         Spacer(modifier = Modifier.height(16.dp))
+
 
         TextField(
             value = currentPassword,
