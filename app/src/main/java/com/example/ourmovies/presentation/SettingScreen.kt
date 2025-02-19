@@ -1,6 +1,7 @@
 package com.example.ourmovies.presentation
 
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.ourmovies.MainActivity
+import com.example.ourmovies.domain.viewModels.AuthViewModel
 import com.example.ourmovies.domain.viewModels.DeleteViewModel
 import com.example.ourmovies.domain.viewModels.UpdateEmailViewModel
 import com.example.ourmovies.domain.viewModels.UpdatePasswordViewModel
@@ -36,7 +39,8 @@ import com.example.ourmovies.domain.viewModels.UpdatePasswordViewModel
 fun SettingsScreen(
     token: String,
     navController: NavController,
-    profileViewModel: DeleteViewModel = viewModel() // Inject ProfileViewModel
+    profileViewModel: DeleteViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val context = LocalContext.current
 
@@ -67,14 +71,18 @@ fun SettingsScreen(
 
         Button(
             onClick = {
-                navController.navigate("login") {
-                    popUpTo("settings") { inclusive = true }
-                }
+                authViewModel.setToken("")
+
+                val intent = Intent(context, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                context.startActivity(intent)
             },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Logout")
         }
+
+
 
         Spacer(modifier = Modifier.height(16.dp))
 

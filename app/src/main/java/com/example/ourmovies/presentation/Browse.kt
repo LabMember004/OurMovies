@@ -50,7 +50,7 @@ import com.example.ourmovies.domain.viewModels.FavoriteViewModel
 
 
 @Composable
-fun Browse(viewModel: MoviesViewModel = viewModel(), favoriteViewModel: FavoriteViewModel = viewModel(), authViewModel: AuthViewModel = viewModel(), navController: NavController ) {
+fun Browse(viewModel: MoviesViewModel = viewModel(), navController: NavController) {
     val data by viewModel.data.collectAsState()
     val isLoading = viewModel.isLoading
     val isEndReached = viewModel.isEndReached
@@ -58,13 +58,9 @@ fun Browse(viewModel: MoviesViewModel = viewModel(), favoriteViewModel: Favorite
     val listState = rememberLazyListState()
 
     var searchQuery by remember { mutableStateOf("") }
-    var selectedGenre by remember { mutableStateOf("") }
+    var selectedGenre by remember { mutableStateOf<String?>(null) }
     var selectedYear by remember { mutableStateOf<Int?>(null) }
     var areFiltersVisible by remember { mutableStateOf(true) }
-
-  
-
-
 
     LaunchedEffect(searchQuery, selectedGenre, selectedYear) {
         viewModel.applyFilters(query = searchQuery, genre = selectedGenre, releaseYear = selectedYear)
@@ -79,9 +75,7 @@ fun Browse(viewModel: MoviesViewModel = viewModel(), favoriteViewModel: Favorite
         }
     }
 
-    Column(
-        modifier = Modifier.padding(16.dp)
-    ) {
+    Column(modifier = Modifier.padding(16.dp)) {
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
@@ -95,15 +89,17 @@ fun Browse(viewModel: MoviesViewModel = viewModel(), favoriteViewModel: Favorite
             exit = fadeOut() + slideOutVertically(targetOffsetY = { -it })
         ) {
             Column {
-                LazyRow(
-                    modifier = Modifier.padding(bottom = 16.dp)
-                ) {
+                // Genre Filter Buttons
+                LazyRow(modifier = Modifier.padding(bottom = 16.dp)) {
                     items(listOf("Action", "Drama", "Comedy", "Horror", "Romance")) { genre ->
                         Button(
                             onClick = {
-                                selectedGenre = genre
-                                viewModel.applyFilters(query = searchQuery, genre = genre, releaseYear = selectedYear)
+                                selectedGenre = if (selectedGenre == genre) null else genre
+                                viewModel.applyFilters(query = searchQuery, genre = selectedGenre, releaseYear = selectedYear)
                             },
+                            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                containerColor = if (selectedGenre == genre) androidx.compose.ui.graphics.Color.Gray else androidx.compose.ui.graphics.Color.Blue
+                            ),
                             modifier = Modifier.padding(end = 8.dp)
                         ) {
                             Text(text = genre)
@@ -111,15 +107,17 @@ fun Browse(viewModel: MoviesViewModel = viewModel(), favoriteViewModel: Favorite
                     }
                 }
 
-                LazyRow(
-                    modifier = Modifier.padding(bottom = 16.dp)
-                ) {
+                // Year Filter Buttons
+                LazyRow(modifier = Modifier.padding(bottom = 16.dp)) {
                     items((1990..2024).toList()) { year ->
                         Button(
                             onClick = {
-                                selectedYear = year
-                                viewModel.applyFilters(query = searchQuery, genre = selectedGenre, releaseYear = year)
+                                selectedYear = if (selectedYear == year) null else year
+                                viewModel.applyFilters(query = searchQuery, genre = selectedGenre, releaseYear = selectedYear)
                             },
+                            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                containerColor = if (selectedYear == year) androidx.compose.ui.graphics.Color.Gray else androidx.compose.ui.graphics.Color.Blue
+                            ),
                             modifier = Modifier.padding(end = 8.dp)
                         ) {
                             Text(text = year.toString())
