@@ -32,6 +32,7 @@ import androidx.navigation.navArgument
 import com.example.ourmovies.domain.navBar.BottomNavBar
 import com.example.ourmovies.domain.network.IsInternetAvailable
 import com.example.ourmovies.domain.viewModels.AuthViewModel
+import com.example.ourmovies.domain.viewModels.UpdateEmailViewModel
 import com.example.ourmovies.presentation.Browse
 import com.example.ourmovies.presentation.FavoriteMoviesScreen
 import com.example.ourmovies.presentation.Home
@@ -137,8 +138,7 @@ fun Navigation(
                 Browse(navController = navController )
             }
             composable(route = Screen.Profile.route) {
-                val context = LocalContext.current
-                Profile(context = context)
+                Profile(token = token )
             }
             composable(route = Screen.Register.route) {
                 Register(

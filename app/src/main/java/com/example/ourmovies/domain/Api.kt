@@ -9,6 +9,8 @@ import com.example.ourmovies.data.MoviesResponse
 import com.example.ourmovies.data.RegisterRequest
 import com.example.ourmovies.data.RegisterResponse
 import com.example.ourmovies.data.SectionsResponse
+import com.example.ourmovies.data.UpdateEmailRequest
+import com.example.ourmovies.data.UpdateEmailResponse
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -16,6 +18,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -54,5 +57,9 @@ interface Api {
         @Path("favoriteId") favoriteId: String,
         @Header("Authorization") token: String
     ): Response<ResponseBody>
-
+    @PATCH("me")
+    suspend fun updateEmail(
+        @Header("Authorization") token: String,
+        @Body request : UpdateEmailRequest
+    ): Response<UpdateEmailResponse>
 }
