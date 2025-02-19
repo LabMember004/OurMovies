@@ -138,6 +138,7 @@ fun Navigation(
                 Browse(navController = navController )
             }
             composable(route = Screen.Profile.route) {
+
                 Profile(token = token )
             }
             composable(route = Screen.Register.route) {
