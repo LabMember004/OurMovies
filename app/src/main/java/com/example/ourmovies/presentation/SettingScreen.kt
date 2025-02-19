@@ -30,20 +30,8 @@ import com.example.ourmovies.domain.viewModels.UpdatePasswordViewModel
 @Composable
 fun SettingsScreen(
     token: String,
-    navController: NavController,
-    profileViewModel: UpdateEmailViewModel = viewModel(),
-    passwordViewModel: UpdatePasswordViewModel = viewModel()
+    navController: NavController
 ) {
-    var selectedOption by remember { mutableStateOf("View") } // Default view is the profile
-    var email by remember { mutableStateOf("") }
-    var currentPassword by remember { mutableStateOf("") }
-    var newPassword by remember { mutableStateOf("") }
-    var confirmNewPassword by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf("") }
-
-    // Access shared preferences
-    val context = LocalContext.current
-    val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
     Column(
         modifier = Modifier
@@ -57,95 +45,20 @@ fun SettingsScreen(
 
         // Buttons for selecting update options
         Button(
-            onClick = { selectedOption = "UpdateEmail" },
+            onClick = { navController.navigate("updateEmail") },
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
         ) {
             Text(text = "Update Email")
         }
         Button(
-            onClick = { selectedOption = "UpdatePassword" },
+            onClick = { navController.navigate("updatePassword") },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Update Password")
         }
 
-        // Show update email form if selected
-        if (selectedOption == "UpdateEmail") {
-            TextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("New Email") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
 
-            if (errorMessage.isNotEmpty()) {
-                Text(text = errorMessage, color = Color.Red)
-            }
-
-            Button(
-                onClick = {
-                    if (email.isNotEmpty() && token.isNotEmpty()) {
-                        profileViewModel.updateEmail(token, email) { isSuccess, message ->
-                            if (isSuccess) {
-                                // Update shared preferences with the new email
-                                sharedPreferences.edit().putString("USER_EMAIL", email).apply()
-                                // Navigate back to profile page to reflect the changes
-                                navController.navigate("profile")
-                            } else {
-                                errorMessage = message
-                            }
-                        }
-                    } else {
-                        errorMessage = "Email and token are required"
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = "Update Email")
-            }
-        }
-
-        // Show update password form if selected
-        if (selectedOption == "UpdatePassword") {
-            Column(modifier = Modifier.padding(16.dp)) {
-                TextField(
-                    value = currentPassword,
-                    onValueChange = { currentPassword = it },
-                    label = { Text("Current Password") }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                TextField(
-                    value = newPassword,
-                    onValueChange = { newPassword = it },
-                    label = { Text("New Password") }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                TextField(
-                    value = confirmNewPassword,
-                    onValueChange = { confirmNewPassword = it },
-                    label = { Text("Confirm New Password") }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = {
-                        passwordViewModel.updatePassword(
-                            token = token,
-                            currentPassword = currentPassword,
-                            newPassword = newPassword,
-                            confirmNewPassword = confirmNewPassword
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "Update Password")
-                }
-            }
-        }
     }
 }
+
 

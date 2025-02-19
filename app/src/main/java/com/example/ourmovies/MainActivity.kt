@@ -43,6 +43,8 @@ import com.example.ourmovies.presentation.MovieDetailsScreen
 import com.example.ourmovies.presentation.Profile
 import com.example.ourmovies.presentation.Register
 import com.example.ourmovies.presentation.SettingsScreen
+import com.example.ourmovies.presentation.UpdateEmailScreen
+import com.example.ourmovies.presentation.UpdatePasswordScreen
 import com.example.ourmovies.presentation.navigation.Screen
 
 import com.example.ourmovies.ui.theme.OurMoviesTheme
@@ -153,6 +155,12 @@ fun Navigation(
             }
             composable(route = Screen.Setting.route) {
                 SettingsScreen(token = token , navController = navController)
+            }
+            composable(route = Screen.UpdateEmail.route) {
+                UpdateEmailScreen(token = token , navController = navController)
+            }
+            composable(route = Screen.UpdatePassword.route) {
+                UpdatePasswordScreen(token=token , navController = navController)
             }
         }
     }
