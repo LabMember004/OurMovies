@@ -1,34 +1,13 @@
 package com.example.ourmovies.presentation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,7 +24,6 @@ import com.example.ourmovies.domain.viewModels.AuthViewModel
 import com.example.ourmovies.domain.viewModels.FavoriteViewModel
 import com.example.ourmovies.domain.viewModels.MoviesViewModel
 
-
 @Composable
 fun MovieDetailsScreen(
     movieId: String,
@@ -54,11 +32,8 @@ fun MovieDetailsScreen(
     moviesViewModel: MoviesViewModel = viewModel(),
     favoriteViewModel: FavoriteViewModel = viewModel()
 ) {
-
     val token by authViewModel.token.observeAsState("")
-
     val movieDetails by moviesViewModel.data.collectAsState()
-
     val movie = movieDetails.firstOrNull { it._id == movieId }
 
     LaunchedEffect(token) {
@@ -68,7 +43,6 @@ fun MovieDetailsScreen(
     }
 
     if (movie != null) {
-        favoriteViewModel.getFavorites(token)
         MovieDetailsContent(movie, navController, favoriteViewModel, token)
     } else {
         MovieDetailsLoadingScreen()
@@ -82,7 +56,8 @@ fun MovieDetailsContent(
     viewModel: FavoriteViewModel,
     token: String
 ) {
-    var isFavorited by remember {mutableStateOf(viewModel.isMovieFavorited(movie._id))}
+    val favorites by viewModel.favorites.observeAsState(emptyList())
+    val isFavorited = favorites.any { it._id == movie._id }
     val heartIconColor = if (isFavorited) Color.Red else Color.Gray
 
     Column(
@@ -119,7 +94,6 @@ fun MovieDetailsContent(
                         } else {
                             viewModel.addFavoriteMovie(movie._id, token)
                         }
-                        isFavorited = !isFavorited
                     }
                 }
             ) {
@@ -137,35 +111,18 @@ fun MovieDetailsContent(
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
-
         ) {
             Column(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
             ) {
-                Text(
-                    text = "Release Year: ${movie.releaseYear}",
-                    color = Color.Gray,
-                )
-
+                Text(text = "Release Year: ${movie.releaseYear}", color = Color.Gray)
                 Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = "Rating: ${movie.rating}/10",
-                    color = Color.Gray,
-                )
-
+                Text(text = "Rating: ${movie.rating}/10", color = Color.Gray)
                 Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = "Runtime: ${movie.runtime} min",
-                    color = Color.Gray,
-                )
-                Text(
-                    text = "Genres: ${movie.genres}",
-                    color = Color.Gray,
-                )
+                Text(text = "Runtime: ${movie.runtime} min", color = Color.Gray)
+                Text(text = "Genres: ${movie.genres}", color = Color.Gray)
             }
         }
 
@@ -180,9 +137,6 @@ fun MovieDetailsContent(
     }
 }
 
-
-
-
 @Composable
 fun MovieDetailsLoadingScreen() {
     Column(
@@ -195,3 +149,4 @@ fun MovieDetailsLoadingScreen() {
         Text("Loading movie details...")
     }
 }
+

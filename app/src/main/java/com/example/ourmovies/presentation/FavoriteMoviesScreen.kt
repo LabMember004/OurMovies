@@ -45,7 +45,7 @@ fun FavoriteMoviesScreen(
     token: String,
     navController: NavController
 ) {
-    val favorites = viewModel.favorites.value
+    val favoriteMovies by viewModel.favorites.observeAsState(emptyList())
 
     LaunchedEffect(Unit) {
         if (token.isNotEmpty()) {
@@ -58,10 +58,11 @@ fun FavoriteMoviesScreen(
     }
 
     LazyColumn {
-        items(favorites) { movie ->
+        items(favoriteMovies) { movie ->
             MovieItem(movie, viewModel, token)
         }
     }
+
 }
 
 @Composable
