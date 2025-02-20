@@ -53,9 +53,7 @@ fun FavoriteMoviesScreen(
         }
     }
 
-    IconButton(onClick = { navController.popBackStack() }) {
-        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
-    }
+
 
     LazyColumn {
         items(favoriteMovies) { movie ->
@@ -105,7 +103,7 @@ fun MovieItem(movie: Movies, viewModel: FavoriteViewModel, token: String) {
 
             IconButton(
                 onClick = { viewModel.deleteFavoriteMovie(movie._id, token) },
-                modifier = Modifier.size(32.dp) // Make the icon bigger
+                modifier = Modifier.size(32.dp)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Delete,

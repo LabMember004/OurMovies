@@ -67,7 +67,7 @@ fun HighlightedMovieSection(movie: Movies) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp )
     ) {
         Text(
             text = "Featured Movie",

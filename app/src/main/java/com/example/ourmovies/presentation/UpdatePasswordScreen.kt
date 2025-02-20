@@ -25,8 +25,8 @@ fun UpdatePasswordScreen(
     var currentPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     var confirmNewPassword by remember { mutableStateOf("") }
-    var successMessage by remember { mutableStateOf("") } // Success message state
-    var isLoading by remember { mutableStateOf(false) } // For loading state
+    var successMessage by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)

@@ -18,13 +18,15 @@ import com.example.ourmovies.domain.viewModels.DeleteViewModel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.IconButton
+import com.example.ourmovies.domain.viewModels.ThemeViewModel
 
 @Composable
 fun SettingsScreen(
     token: String,
     navController: NavController,
     profileViewModel: DeleteViewModel = viewModel(),
-    authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel = viewModel(),
+    themeViewModel: ThemeViewModel = viewModel()
 ) {
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
@@ -46,6 +48,15 @@ fun SettingsScreen(
         ) {
             Text(text = "Settings", style = MaterialTheme.typography.headlineLarge)
             Spacer(modifier = Modifier.height(16.dp))
+
+            Button(onClick = { themeViewModel.toggleTheme() }, modifier = Modifier.padding(16.dp)) {
+                if (themeViewModel.isDarkMode.value) {
+                    Text("Switch to Light Mode")
+                } else {
+                    Text("Switch to Dark Mode")
+                }
+            }
+
 
             Button(
                 onClick = { navController.navigate("updateEmail") },

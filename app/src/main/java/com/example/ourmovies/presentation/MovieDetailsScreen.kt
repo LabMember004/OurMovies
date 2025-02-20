@@ -38,11 +38,14 @@ fun MovieDetailsScreen(
 
     LaunchedEffect(token) {
         if (token.isNotEmpty()) {
+
+
             favoriteViewModel.getFavorites(token)
         }
     }
 
     if (movie != null) {
+
         MovieDetailsContent(movie, navController, favoriteViewModel, token)
     } else {
         MovieDetailsLoadingScreen()

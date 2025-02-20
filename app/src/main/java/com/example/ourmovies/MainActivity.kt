@@ -12,14 +12,18 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontVariation
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,6 +37,7 @@ import androidx.navigation.navArgument
 import com.example.ourmovies.domain.navBar.BottomNavBar
 import com.example.ourmovies.domain.network.IsInternetAvailable
 import com.example.ourmovies.domain.viewModels.AuthViewModel
+import com.example.ourmovies.domain.viewModels.ThemeViewModel
 import com.example.ourmovies.domain.viewModels.UpdateEmailViewModel
 import com.example.ourmovies.presentation.Browse
 import com.example.ourmovies.presentation.FavoriteMoviesScreen
@@ -52,17 +57,21 @@ import com.example.ourmovies.ui.theme.OurMoviesTheme
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            OurMoviesTheme {
-                Navigation()
 
+
+        setContent {
+
+            val themeViewModel: ThemeViewModel = viewModel()
+            val isDarkMode = themeViewModel.isDarkMode.value
+
+            OurMoviesTheme() {
+                Navigation()  // Your existing Navigation Composable
             }
+
         }
     }
+
 
     class NetworkChangeReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -165,9 +174,6 @@ fun Navigation(
         }
     }
 }
-
-
-
 
 
 
