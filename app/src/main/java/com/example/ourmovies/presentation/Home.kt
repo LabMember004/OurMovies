@@ -6,6 +6,7 @@ import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -24,7 +25,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.example.ourmovies.R
 import com.example.ourmovies.data.HighlightedMovie
 import com.example.ourmovies.data.Movies
 import com.example.ourmovies.data.Section
@@ -34,7 +37,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 @Composable
-fun Home(viewModel: MoviesViewModel = viewModel() ) {
+fun Home(viewModel: MoviesViewModel = viewModel(), navController: NavController) {
     val sections by viewModel.sections.collectAsState()
 
     Log.d("Home Screen", "Sections: $sections")
@@ -44,23 +47,22 @@ fun Home(viewModel: MoviesViewModel = viewModel() ) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
-            // Show a highlighted movie at the top
             if (sections.isNotEmpty() && sections.first().movies.isNotEmpty()) {
                 HighlightedMovieSection(movie = sections.first().movies.first())
             }
         }
 
         items(sections) { section ->
-            MovieSection(section)
+            MovieSection(section = section, navController = navController)
         }
     }
 }
 
 
 
+
 @Composable
 fun HighlightedMovieSection(movie: Movies) {
-    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -73,15 +75,26 @@ fun HighlightedMovieSection(movie: Movies) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 8.dp)
         )
+        fun extractVideoId(url: String): String? {
+            val regex = "https?://(?:www\\.)?youtube\\.com/(?:watch\\?v=|embed/)([A-Za-z0-9_-]+)".toRegex()
+            val matchResult = regex.find(url)
+            return matchResult?.groupValues?.get(1)
+        }
 
-        Image(
-            painter = rememberImagePainter(movie.poster),
-            contentDescription = movie.title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(250.dp),
-            contentScale = ContentScale.Crop
-        )
+        val videoId = movie.trailer?.let { extractVideoId(it) }
+
+        if (videoId != null) {
+            YoutubeScreen(videoId = videoId)
+        } else {
+            Image(
+                painter = rememberImagePainter(movie.poster),
+                contentDescription = movie.title,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp),
+                contentScale = ContentScale.Crop
+            )
+        }
 
         Text(
             text = movie.title,
@@ -91,31 +104,36 @@ fun HighlightedMovieSection(movie: Movies) {
         )
 
         Text(text = "⭐ ${movie.rating} | ${movie.genres.joinToString(", ")}")
-
-        // Check if trailer URL exists
-        if (movie.trailer != null && movie.trailer.isNotEmpty()) {
-            Log.d("HighlightedMovie", "Trailer URL: ${movie.trailer}")
-
-            Button(
-                onClick = {
-                    // Open the trailer URL in the browser
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(movie.trailer))
-                    context.startActivity(intent)
-                },
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                Text(text = "Watch Trailer")
-            }
-        }
     }
 }
 
 
 
+@Composable
+fun YoutubeScreen(
+    videoId: String,
+    modifier: Modifier = Modifier
+) {
+    val ctx = LocalContext.current
+    AndroidView(factory = {
+        val view = YouTubePlayerView(ctx)
+        view.addYouTubePlayerListener(
+            object : AbstractYouTubePlayerListener() {
+                override fun onReady(youTubePlayer: YouTubePlayer) {
+                    super.onReady(youTubePlayer)
+                    youTubePlayer.loadVideo(videoId, 0f)
+                }
+            }
+        )
+        view
+    })
+}
+
+
 
 
 @Composable
-fun MovieSection(section: Section) {
+fun MovieSection(section: Section, navController: NavController) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(start = 16.dp)
     ) {
@@ -131,17 +149,20 @@ fun MovieSection(section: Section) {
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(section.movies) { movie ->
-                MovieCard(movie)
+                HomeMovieCard(movie = movie, navController = navController)
             }
         }
     }
 }
 
 @Composable
-fun MovieCard(movie: Movies) {
+fun HomeMovieCard(movie: Movies, navController: NavController) {
     Card(
         modifier = Modifier
-            .width(150.dp),
+            .width(150.dp)
+            .clickable {
+                navController.navigate("movieDetails/${movie._id}")
+            },
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
@@ -149,40 +170,39 @@ fun MovieCard(movie: Movies) {
             modifier = Modifier
                 .height(280.dp)
         ) {
-            // Image section
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(160.dp)
             ) {
                 Image(
-                    painter = rememberImagePainter(movie.poster),
+                    painter = rememberImagePainter(
+                        data = movie.poster,
+                        builder = {
+                            crossfade(true)
+                        }
+                    ),
                     contentDescription = movie.title,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
             }
 
-            // Content section with title at top and rating/genres at bottom
             Column(
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
                     .weight(1f),
-                verticalArrangement = Arrangement.SpaceBetween // This ensures spacing between top and bottom content
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                // Title at the top
                 Text(
                     text = movie.title,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
+                    overflow = TextOverflow.Ellipsis
+                )
 
-
-                    )
-
-                // Rating and genres at the bottom
                 Column {
                     Text(
                         text = "⭐ ${movie.rating}",
@@ -200,6 +220,8 @@ fun MovieCard(movie: Movies) {
         }
     }
 }
+
+
 
 
 

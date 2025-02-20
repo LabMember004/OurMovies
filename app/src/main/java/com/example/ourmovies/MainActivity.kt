@@ -151,7 +151,7 @@ fun Navigation(
                     onNavigateBack = {navController.navigate(Screen.Login.route)})
             }
             composable(route = Screen.Home.route) {
-                Home()
+                Home(navController = navController)
             }
             composable(route = Screen.Setting.route) {
                 SettingsScreen( token = token, navController = navController)

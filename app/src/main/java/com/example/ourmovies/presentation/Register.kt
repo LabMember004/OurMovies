@@ -97,7 +97,9 @@ fun Register(navController: NavController, onNavigateBack: () -> Unit) {
                     viewModel.registerUser(name, email, password, confirmPassword)
                     onSuccessMessage = "Registration Successful"
                     errorMessage = ""
-                    navController.navigate("home")
+                    navController.navigate("home") {
+                        popUpTo("register"){inclusive = true}
+                    }
                 }
             },
             modifier = Modifier.fillMaxWidth()
