@@ -27,17 +27,15 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 @Composable
-fun OurMoviesTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
-        darkColorScheme() // Define dark colors here
-    } else {
-        lightColorScheme() // Define light colors here
-    }
+fun OurMoviesTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colors = if (darkTheme) DarkColorScheme else LightColorScheme
 
     MaterialTheme(
         colorScheme = colors,
-        typography = Typography, // Your typography settings
+        typography = Typography,
         content = content
     )
 }
-

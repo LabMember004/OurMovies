@@ -26,10 +26,12 @@ fun SettingsScreen(
     navController: NavController,
     profileViewModel: DeleteViewModel = viewModel(),
     authViewModel: AuthViewModel = viewModel(),
-    themeViewModel: ThemeViewModel = viewModel()
+    themeViewModel: ThemeViewModel
 ) {
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
+
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         IconButton(
@@ -49,13 +51,12 @@ fun SettingsScreen(
             Text(text = "Settings", style = MaterialTheme.typography.headlineLarge)
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = { themeViewModel.toggleTheme() }, modifier = Modifier.padding(16.dp)) {
-                if (themeViewModel.isDarkMode.value) {
-                    Text("Switch to Light Mode")
-                } else {
-                    Text("Switch to Dark Mode")
-                }
+
+            Button(onClick = { themeViewModel.toggleTheme() }) {
+                val themeText = if (themeViewModel.isDarkMode.value) "Switch to Light Mode" else "Switch to Dark Mode"
+                Text(themeText)
             }
+
 
 
             Button(

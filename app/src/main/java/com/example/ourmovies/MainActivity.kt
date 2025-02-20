@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -65,11 +66,12 @@ class MainActivity : ComponentActivity() {
             val themeViewModel: ThemeViewModel = viewModel()
             val isDarkMode = themeViewModel.isDarkMode.value
 
-            OurMoviesTheme() {
-                Navigation()  // Your existing Navigation Composable
-            }
 
+            OurMoviesTheme(darkTheme = isDarkMode) {
+                Navigation(themeViewModel = themeViewModel)
+            }
         }
+
     }
 
 
@@ -102,7 +104,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Navigation(
     navController: NavHostController = rememberNavController(),
-    viewModel: AuthViewModel = viewModel()
+    viewModel: AuthViewModel = viewModel(),
+    themeViewModel: ThemeViewModel
 ) {
     val token by viewModel.token.observeAsState("")
 
@@ -163,7 +166,7 @@ fun Navigation(
                 Home(navController = navController)
             }
             composable(route = Screen.Setting.route) {
-                SettingsScreen( token = token, navController = navController)
+                SettingsScreen( token = token, navController = navController , themeViewModel = themeViewModel)
             }
             composable(route = Screen.UpdateEmail.route) {
                 UpdateEmailScreen(token = token , navController = navController)
