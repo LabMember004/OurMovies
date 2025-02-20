@@ -1,50 +1,31 @@
 package com.example.ourmovies.presentation
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import android.util.Patterns
 import com.example.ourmovies.domain.viewModels.RegisterViewModel
 
-import android.util.Patterns
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.ui.text.font.FontWeight
-import androidx.navigation.NavController
-
 @Composable
-fun Register(navController: NavController, onNavigateBack:() -> Unit) {
+fun Register(navController: NavController, onNavigateBack: () -> Unit) {
     val viewModel: RegisterViewModel = viewModel()
 
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-
     var isPasswordMatch by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf("") }
     var onSuccessMessage by remember { mutableStateOf("") }
-
-    viewModel.name = name
-    viewModel.email = email
-    viewModel.password = password
-    viewModel.confirmPassword = confirmPassword
 
     Column(
         modifier = Modifier
@@ -53,7 +34,6 @@ fun Register(navController: NavController, onNavigateBack:() -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
         TextField(
             value = name,
             onValueChange = { name = it },
@@ -62,7 +42,6 @@ fun Register(navController: NavController, onNavigateBack:() -> Unit) {
             singleLine = true
         )
         Spacer(modifier = Modifier.height(8.dp))
-
 
         TextField(
             value = email,
@@ -73,7 +52,6 @@ fun Register(navController: NavController, onNavigateBack:() -> Unit) {
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-
         TextField(
             value = password,
             onValueChange = { password = it },
@@ -82,8 +60,7 @@ fun Register(navController: NavController, onNavigateBack:() -> Unit) {
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(16.dp))
-
+        Spacer(modifier = Modifier.height(8.dp))
 
         TextField(
             value = confirmPassword,
@@ -95,6 +72,8 @@ fun Register(navController: NavController, onNavigateBack:() -> Unit) {
         )
         Spacer(modifier = Modifier.height(16.dp))
 
+        isPasswordMatch = password == confirmPassword
+
         if (!isPasswordMatch) {
             Text(text = "Passwords do not match", color = Color.Red)
         }
@@ -105,12 +84,20 @@ fun Register(navController: NavController, onNavigateBack:() -> Unit) {
 
         Button(
             onClick = {
-                if (viewModel.name.isEmpty() || viewModel.email.isEmpty() || viewModel.password.isEmpty() || viewModel.confirmPassword.isEmpty()) {
+                if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                     errorMessage = "All fields are required"
+                    onSuccessMessage = ""
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    errorMessage = "Invalid email format"
+                    onSuccessMessage = ""
+                } else if (!isPasswordMatch) {
+                    errorMessage = "Passwords do not match"
+                    onSuccessMessage = ""
                 } else {
-                    viewModel.registerUser(viewModel.name, viewModel.email, viewModel.password, viewModel.confirmPassword)
+                    viewModel.registerUser(name, email, password, confirmPassword)
                     onSuccessMessage = "Registration Successful"
                     errorMessage = ""
+                    navController.navigate("home")
                 }
             },
             modifier = Modifier.fillMaxWidth()
@@ -122,23 +109,18 @@ fun Register(navController: NavController, onNavigateBack:() -> Unit) {
             Text(text = errorMessage, color = Color.Red)
         }
 
+        if (onSuccessMessage.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = onSuccessMessage, color = Color.Green)
+        }
+
         Text("Already have an account?")
 
         Text(
             text = "Login",
             color = Color.Blue,
             fontWeight = FontWeight.Bold,
-            modifier =  Modifier.clickable {
-                onNavigateBack()
-            }
-
-
+            modifier = Modifier.clickable { onNavigateBack() }
         )
-        if (onSuccessMessage.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text (text = onSuccessMessage , color = Color.Green)
-        }
     }
 }
-
-
