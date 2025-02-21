@@ -1,4 +1,4 @@
-package com.example.ourmovies.domain.network
+package com.example.ourmovies.data.network
 
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities

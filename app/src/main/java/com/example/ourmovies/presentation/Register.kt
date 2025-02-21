@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import android.util.Patterns
-import com.example.ourmovies.domain.viewModels.RegisterViewModel
+import com.example.ourmovies.presentation.viewModels.RegisterViewModel
 
 @Composable
 fun Register(navController: NavController, onNavigateBack: () -> Unit) {
@@ -97,7 +97,7 @@ fun Register(navController: NavController, onNavigateBack: () -> Unit) {
                     viewModel.registerUser(name, email, password, confirmPassword)
                     onSuccessMessage = "Registration Successful"
                     errorMessage = ""
-                    navController.navigate("home") {
+                    navController.navigate("login") {
                         popUpTo("register"){inclusive = true}
                     }
                 }

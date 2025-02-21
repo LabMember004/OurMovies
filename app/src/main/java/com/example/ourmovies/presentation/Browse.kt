@@ -40,13 +40,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.example.ourmovies.domain.viewModels.MoviesViewModel
+import com.example.ourmovies.presentation.viewModels.MoviesViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.ourmovies.data.Movies
-import com.example.ourmovies.domain.viewModels.AuthViewModel
-import com.example.ourmovies.domain.viewModels.FavoriteViewModel
+import com.example.ourmovies.presentation.viewModels.AuthViewModel
+import com.example.ourmovies.presentation.viewModels.FavoriteViewModel
 
 
 @Composable

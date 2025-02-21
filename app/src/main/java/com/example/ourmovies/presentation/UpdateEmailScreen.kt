@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.ourmovies.domain.viewModels.UpdateEmailViewModel
+import com.example.ourmovies.presentation.viewModels.UpdateEmailViewModel
 
 @Composable
 fun UpdateEmailScreen(

@@ -31,7 +31,7 @@ import com.example.ourmovies.R
 import com.example.ourmovies.data.HighlightedMovie
 import com.example.ourmovies.data.Movies
 import com.example.ourmovies.data.Section
-import com.example.ourmovies.domain.viewModels.MoviesViewModel
+import com.example.ourmovies.presentation.viewModels.MoviesViewModel
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView

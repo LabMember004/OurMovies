@@ -1,4 +1,4 @@
-package com.example.ourmovies.domain.viewModels
+package com.example.ourmovies.presentation.viewModels
 
 import android.util.Log
 import androidx.compose.runtime.State
@@ -17,7 +17,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 
-class FavoriteViewModel : ViewModel() {
+class FavoriteViewModel() : ViewModel() {
     private val _favorites = MutableLiveData<List<Movies>>(emptyList())
     val favorites: LiveData<List<Movies>> get() = _favorites
 

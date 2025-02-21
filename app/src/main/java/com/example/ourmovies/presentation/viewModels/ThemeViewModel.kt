@@ -1,4 +1,4 @@
-package com.example.ourmovies.domain.viewModels
+package com.example.ourmovies.presentation.viewModels
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

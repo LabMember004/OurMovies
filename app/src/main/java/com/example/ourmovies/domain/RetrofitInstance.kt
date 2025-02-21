@@ -1,6 +1,6 @@
 package com.example.ourmovies.domain
 
-import okhttp3.OkHttpClient
+import com.example.ourmovies.data.Api
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

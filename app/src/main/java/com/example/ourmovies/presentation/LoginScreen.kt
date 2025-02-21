@@ -13,7 +13,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.ourmovies.domain.viewModels.LoginViewModel
+import com.example.ourmovies.presentation.viewModels.LoginViewModel
 
 @Composable
 fun LoginScreen(navController: NavController, onLoginSuccess: (String) -> Unit , onNavigateToRegister : () -> Unit) {

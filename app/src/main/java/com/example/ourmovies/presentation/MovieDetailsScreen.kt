@@ -20,9 +20,9 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.ourmovies.R
 import com.example.ourmovies.data.Movies
-import com.example.ourmovies.domain.viewModels.AuthViewModel
-import com.example.ourmovies.domain.viewModels.FavoriteViewModel
-import com.example.ourmovies.domain.viewModels.MoviesViewModel
+import com.example.ourmovies.presentation.viewModels.AuthViewModel
+import com.example.ourmovies.presentation.viewModels.FavoriteViewModel
+import com.example.ourmovies.presentation.viewModels.MoviesViewModel
 
 @Composable
 fun MovieDetailsScreen(

@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.ourmovies.domain.ProfileImagePicker
-import com.example.ourmovies.domain.viewModels.UpdateEmailViewModel
-import com.example.ourmovies.domain.viewModels.UpdatePasswordViewModel
+import com.example.ourmovies.presentation.viewModels.UpdateEmailViewModel
+import com.example.ourmovies.presentation.viewModels.UpdatePasswordViewModel
 
 @Composable
 fun Profile(

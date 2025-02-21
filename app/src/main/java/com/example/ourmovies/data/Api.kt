@@ -1,18 +1,5 @@
-package com.example.ourmovies.domain
+package com.example.ourmovies.data
 
-import android.media.session.MediaSession.Token
-import com.example.ourmovies.data.FavoriteRequest
-import com.example.ourmovies.data.LoginRequest
-import com.example.ourmovies.data.LoginResponse
-import com.example.ourmovies.data.Movies
-import com.example.ourmovies.data.MoviesResponse
-import com.example.ourmovies.data.RegisterRequest
-import com.example.ourmovies.data.RegisterResponse
-import com.example.ourmovies.data.SectionsResponse
-import com.example.ourmovies.data.UpdateEmailRequest
-import com.example.ourmovies.data.UpdateEmailResponse
-import com.example.ourmovies.data.UpdatePasswordRequest
-import com.example.ourmovies.data.UpdatePasswordResponse
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response

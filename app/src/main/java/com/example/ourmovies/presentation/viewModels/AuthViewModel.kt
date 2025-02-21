@@ -1,4 +1,4 @@
-package com.example.ourmovies.domain.viewModels
+package com.example.ourmovies.presentation.viewModels
 
 import android.util.Log
 import androidx.lifecycle.LiveData

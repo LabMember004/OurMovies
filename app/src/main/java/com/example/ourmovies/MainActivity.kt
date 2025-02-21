@@ -35,11 +35,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.ourmovies.domain.navBar.BottomNavBar
-import com.example.ourmovies.domain.network.IsInternetAvailable
-import com.example.ourmovies.domain.viewModels.AuthViewModel
-import com.example.ourmovies.domain.viewModels.ThemeViewModel
-import com.example.ourmovies.domain.viewModels.UpdateEmailViewModel
+import com.example.ourmovies.presentation.navBar.BottomNavBar
+import com.example.ourmovies.data.network.IsInternetAvailable
+import com.example.ourmovies.presentation.viewModels.AuthViewModel
+import com.example.ourmovies.presentation.viewModels.ThemeViewModel
+import com.example.ourmovies.presentation.viewModels.UpdateEmailViewModel
 import com.example.ourmovies.presentation.Browse
 import com.example.ourmovies.presentation.FavoriteMoviesScreen
 import com.example.ourmovies.presentation.Home

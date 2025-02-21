@@ -1,4 +1,4 @@
-package com.example.ourmovies.domain.navBar
+package com.example.ourmovies.presentation.navBar
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle

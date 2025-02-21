@@ -13,12 +13,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.ourmovies.MainActivity
-import com.example.ourmovies.domain.viewModels.AuthViewModel
-import com.example.ourmovies.domain.viewModels.DeleteViewModel
+import com.example.ourmovies.presentation.viewModels.AuthViewModel
+import com.example.ourmovies.presentation.viewModels.DeleteViewModel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.IconButton
-import com.example.ourmovies.domain.viewModels.ThemeViewModel
+import com.example.ourmovies.presentation.viewModels.ThemeViewModel
 
 @Composable
 fun SettingsScreen(
